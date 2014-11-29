@@ -1,0 +1,232 @@
+\documentclass[11pt,a4paper]{article}
+% Interlinia
+\linespread{1.15}
+% Polskie różności
+\usepackage[utf8]{inputenc}
+\usepackage{polski}
+%\usepackage[polish]{babel}
+% Kropki po numerach sekcji w tekście...
+\usepackage{secdot}
+\sectiondot{subsection}
+\sectiondot{subsubsection}
+% ... i spisie treści
+\usepackage{tocloft}
+\renewcommand{\cftsecaftersnum}{.}
+\renewcommand{\cftsubsecaftersnum}{.}
+\renewcommand{\cftsubsubsecaftersnum}{.}
+% Przeklęte tabelki
+\usepackage[labelfont=it]{caption}
+\setcounter{table}{-1}
+% do rysowania wykresu gantta
+\usepackage{pgfgantt}
+% równanie marginesów przy harmonogramie
+\usepackage[a4paper]{geometry}
+
+\begin{document}
+
+%
+% Strona tytułowa
+%
+\pagenumbering{gobble}
+\begin{center}
+	\Large
+	Studencka Pracownia Inżynierii Oprogramowania \\[0.5cm]
+	Instytut Informatyki Uniwersytetu Wrocławskiego 
+
+	\vspace*{\fill}
+	Rafał Pacut, Gabriel Sztorc \\[1cm]
+	{\Huge System obsługi bibliotek publicznych} \\[1cm]
+	Analiza wstępna
+	\vspace*{\fill}
+
+	Wrocław, 4 listopada 2014 \\[0.5cm]
+	Wersja 0.3
+\end{center}
+\newpage
+\pagenumbering{arabic}
+\setcounter{page}{2}
+%
+% Koniec strony tytułowej
+%
+
+%
+% Tabela zmian
+%
+\begin{table}
+\caption{Historia zmian dokonanych w dokumencie}
+\begin{tabular}{|l|l|l|l|}
+    \hline
+    \multicolumn{1}{|c|}{Data} & \multicolumn{1}{c|}{Numer wersji} & 
+        \multicolumn{1}{c|}{Opis} & \multicolumn{1}{c|}{Autor} \\
+    \hline \hline
+    2014-10-20 & 0.1 & Utworzenie dokumentu & Rafał Pacut, Gabriel Sztorc \\
+    \hline
+    2014-10-28 & 0.2 & Rozwinięcie dokumentu & Gabriel Sztorc \\
+    \hline
+    2014-11-04 & 0.3 & Uzupełnienie dokumentu & Gabriel Sztorc \\
+    \hline
+    2014-11-13 & 0.4 & Harmonogram & Rafał Pacut \\
+    \hline
+\end{tabular}
+\end{table}
+%
+% Koniec tabeli zmian
+%
+
+% \section*{Spis treści}
+\tableofcontents
+
+\newpage
+
+\setcounter{section}{-1}
+\section{Streszczenie dokumentu}
+Przedmiotem niniejszego dokumentu jest analiza wstępna projektu oprogramowania
+wspomagającego pracę bibliotek publicznych. Przedstawione zostają: cele i
+zakres projektu, wstępny opis i analiza proponowanego rozwiązania oraz zarys
+wymagań.
+
+\section{Wstęp}
+\subsection{Cele przedsięwzięcia}
+Celem przedsięwzięcia jest wytworzenie oprogramowania które usprawni
+wykonywanie codziennych czynności związanych z pracą bibliotek publicznych
+Oprogramowanie powino ułatwić czytelnikom uzyskiwanie informacji o zbiorach
+biblioteki i ich dostępności, przyśpieszyć obsługę czytelników przez personel
+biblioteki, ułatwić wykonywanie prac ewidencyjnych oraz usprawnić egzekwowanie
+przepisów biblioteki dotyczących terminów zwrotów i limitów wypożyczeń. 
+
+\subsection{Zakres przedsięwzięcia}
+W ramach projektu wykonane zostaną następujące prace:
+\begin{itemize}
+  \item Wytworzenia oprogramowania do obsługi wypożyczeń, zwrotów i innych
+    czynności wykonywanych przez pracowników biblioteki, mogącego
+    pracować na wielu stanowiskach jednocześnie. 
+  \item Wytworzenie oprogramowanie do przeglądania i przeszukiwania katalogu
+    zbiorów bibliotecznych przeznaczone dla czytelników, także mogącego
+    pracować na wielu stanowiskach równocześnie oraz oferującego dostęp przez
+    Internet.
+  \item Wytworzenie systemu do przechowywania informacji o zbiorach
+    bibliotecznych, czytelnikach, wypożeczeniach oraz udostępniania tych
+    informacji za pośrednictwem sieci komputerowej.
+  \item Przygotowanie procesu instalowania i konfigurowania systemu oraz
+    przeszkolenia użytkowników, który umożliwi wdrożenie oprogramowania w wielu
+    bibliotekach publicznych.
+\end{itemize}
+
+\subsection{Definicje}
+Poniżej przedstawione zostają definicje niektórych pojęć używanych w
+dokumencie:
+\begin{description}
+  \item[czytelnik] Użytkownik systemu będący zarejestrowanym czytelnikiem
+    biblioteki.
+  \item[klient] Program, z którego korzystają użytkownicy końcowi systemu,
+    komunikujący się z serwerem.
+  \item[pracownik] Użytkownik systemu należący do personelu biblioteki.
+  \item[serwer] Komputer i uruchomione na nim oprogramowanie przechowujące w
+    scentralizowany sposób dane systemu i udostępniające je klientom za
+    pośrednictwem sieci komputerowej.
+  \item[zbiory] Dzieła zgromadzone w bibliotece, udostępniane czytelnikom.
+\end{description}
+
+\section{Opis proponowanego rozwiązania}
+System wykonany zostanie w architekturze klient-serwer. Część serwerowa będzie
+realizowała funkcje przechowywania i dystrybucji danych. Użytkownicy będą
+komunikować się z systemem za pomocą oprogramowania klienta.
+
+\subsection{Elementy systemu}
+\begin{itemize}
+  \item Centralnym elementem systemu będzie baza danych przechowująca
+    informacje o: zbiorach biblioteki, zarejestrowanych czytelnikach,
+    użytkownikach systemu i ich uprawnieniach, historii wypożyczeń i zwrotów.
+  \item Funkcje systemu przewidziane dla czytelników będą udostępniane za
+    pośrednictwem strony WWW. Część serwerowa serwisu WWW będzie
+    komunikować się z bazą danych i generować dynamicznie kod strony w
+    odpowiedzi na akcje użytkownika.
+  \item Na część kliencką serwisu WWW składać się będą elementy graficzne
+    strony, szablony kodu HTML i CSS, do których wstawione mają być dane
+    uzyskane z bazy oraz kod w języku JavaScript.
+  \item Pracownicy biblioteki korzystać będą z oddzielnego programu klienta,
+    komunikującego się bezpośrednio z bazą danych.
+\end{itemize}
+
+\subsection{Środowisko systemu}
+Projekt będzie wykorzystywał system zarządzania bazą danych {\sc PostgreSQL}.
+Wszystkie jego elementy wykonujące się na sprzęcie biblioteki będą działać pod
+kontrolą systemu operacyjnego \mbox{\sc Linux}. Strona WWW powinna działać w
+najnowszych wersjach popularnych przeglądarek \mbox{\sc Chrome}, \mbox{\sc
+Firefox} i {\sc \mbox{Internet} \mbox{Explorer}}.
+
+\section{Ogólny opis wymagań}
+W tym rozdziale przedstawiony zostaje zarys wymagań, które powinien spełniać
+system. Wymienione zostają rodzaje danych jakie system powinien przechowywać, a
+następnie czynności jakie powinni móc wykonać użytkownicy systemu.
+
+\subsection{Przechowywane dane}
+W podrozdiale tym wymienione są dane jakie system powinien przechowywać. Lista
+ta nie wyklucza przechowywania dodatkowych informacji, na przykład możliwości
+dodania uwag i komentarzy do niektórych wpisów. Poniżej wymieniony zostaje
+minimalny zestaw danych, które muszą być przechowywane by system mógł
+spełniać swoje zadania:
+
+\begin{itemize}
+  \item Lista czytelników zarejestrowanych w bibliotece. Dla każdego czytelnika
+    powinny być przechowywane informacje identyfikacyjne oraz dane kontaktowe.
+  \item Wykaz zbiorów biblioteki. Dla każdego dzieła winny być przechowywany
+    kompletny zestaw danych pozwalających je zidentyfikować, numer ewidencyjny
+    używany przez system oraz rodzaj oraz gatunek dzieła. Powinna istnieć
+    możliwość wydzielenia materiałów wypożyczanych od dostępnych wyłącznie w
+    ramach czytelni. Powinna także istnieć możliwość odnotowywania informacji o
+    zmianach w zbiorach wynikających z zagubień lub zniszczeń. 
+  \item Lista pracowników korzystających z systemu. Dla każdego powinna
+    być przechowywana unikalna nazwa użytkownika identyfikująca pracownika w
+    systemie.
+  \item Informacje o wypożyczeniach bieżących i minionych: ile razy dana
+    pozycja była wypożyczana, przez kogo, daty wypożyczeń i zwrotów.
+\end{itemize}
+
+\subsection{Funkcje dostępne dla czytelników}
+Czytelnik powinien mieć dostęp do elektronicznego katalogu zbiorów
+bibliotecznych. Powinna istnieć możliwość przeszukiwania katalogu według
+złożonych kryteriów. Czytelnik powinien być poinformowany o dostępności
+wskazanych dzieł. Powinien istnieć mechanizm rezerwacji, który mógłby być
+włączony lub wyłączony w konfiguracji systemu, w zależności od organizacji
+pracy biblioteki.
+
+\subsection{Funkcje dostępne dla pracowników}
+Oprogramowanie używane przez pracowników powinno umożliwiać wykonanie
+następujących czynności: 
+\begin{itemize}
+  \item Zarejestrowanie nowego czytelnika w systemie.
+  \item Wprowadzenie informacji identyfikujących pozycję ze zbiorów i
+    oznaczenie jej jako wypożyczonej przez określonego czytelnika.
+  \item Wprowadzenie informacji o oddaniu wypożyczonego dzieła.
+  \item Dodanie nowej pozycji do wykazu zbiorów biblioteki.
+  \item Uzyskanie informacji o czytelnikach preztrzymującyh wypożyczone dzieła
+    powyżej regulaminowego limitu.
+  \item Przeprowadzenie inwentaryzacji zasobów bibliotecznych.
+\end{itemize}
+
+\subsection{Dodatkowe wymagania}
+System powinien wykorzystywać fizyczne znaczniki takie jak kody kreskowe,
+mogące być umieszczone zarówno na przechowywanych w bibliotece materiałach, jak
+i na kartach bibliotecznych czytelników i pozwalające usprawnić proces
+wprowadzania danych identyfikacyjnych za pomocą automatycznych czytników. 
+
+W zakresie obsługiwanych czynności ewidencyjnych system powinien
+umożliwić użytkownikom działanie zgodne z Rozporządzeniem Ministra Kultury i
+Dziedzictwa Narodowego z dnia 29 października 2008 r. w sprawie sposobu
+ewidencji materiałów bibliotecznych~\cite{rozpo}.
+
+\newpage
+%\section{Harmonogram}
+%Nie wiem dlaczego '\section{Harmonogram}' w tym pliku powodowało 
+%pustą linię. Przeniosłem go do gantt.tex
+\include{gantt}
+
+\begin{thebibliography}{99}
+  \bibitem{rozpo} \textit{Rozporządzenie Ministra Kultury i Dziedzictwa
+    Narodowego z dnia 29 października w sprawie sposobu ewidencji materiałów
+    bibliotecznych.} Dziennik Ustaw 2008 nr 205 poz. 1283.  
+
+\end{thebibliography}
+
+\end{document}

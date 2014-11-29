@@ -1,0 +1,169 @@
+\documentclass[11pt,a4paper]{article}
+% Interlinia
+\linespread{1.15}
+% Polskie różności
+\usepackage[utf8]{inputenc}
+\usepackage{polski}
+%\usepackage[polish]{babel}
+% Kropki po numerach sekcji w tekście...
+\usepackage{secdot}
+\sectiondot{subsection}
+\sectiondot{subsubsection}
+% ... i spisie treści
+\usepackage{tocloft}
+\renewcommand{\cftsecaftersnum}{.}
+\renewcommand{\cftsubsecaftersnum}{.}
+\renewcommand{\cftsubsubsecaftersnum}{.}
+% Przeklęte tabelki
+\usepackage[labelfont=it]{caption}
+\setcounter{table}{-1}
+% do rysowania wykresu gantta
+\usepackage{pgfgantt}
+% równanie marginesów przy harmonogramie
+\usepackage[a4paper]{geometry}
+%tikz
+\usepackage{tikz}
+\usepackage{tikz-uml}
+
+
+\begin{document}
+
+%
+% Strona tytułowa
+%
+\pagenumbering{gobble}
+\begin{center}
+	\Large
+	Studencka Pracownia Inżynierii Oprogramowania \\[0.5cm]
+	Instytut Informatyki Uniwersytetu Wrocławskiego 
+
+	\vspace*{\fill}
+	Rafał Pacut, Gabriel Sztorc \\[1cm]
+	{\Huge System obsługi bibliotek publicznych} \\[1cm]
+	Harmonogram i Przypadki Użycia
+	\vspace*{\fill}
+
+	Wrocław, 29 listopada 2014 \\[0.5cm]
+	Wersja 0.3
+\end{center}
+\newpage
+\pagenumbering{arabic}
+\setcounter{page}{2}
+%
+% Koniec strony tytułowej
+%
+
+%
+% Tabela zmian
+%
+\begin{table}
+\caption{Historia zmian dokonanych w dokumencie}
+\begin{tabular}{|l|l|l|l|}
+    \hline
+    \multicolumn{1}{|c|}{Data} & \multicolumn{1}{c|}{Numer wersji} & 
+        \multicolumn{1}{c|}{Opis} & \multicolumn{1}{c|}{Autor} \\
+    \hline \hline
+    2014-10-20 & 0.1 & Utworzenie dokumentu & Rafał Pacut, Gabriel Sztorc \\
+    \hline
+\end{tabular}
+\end{table}
+%
+% Koniec tabeli zmian
+%
+
+% \section*{Spis treści}
+\tableofcontents
+
+\newpage
+
+\setcounter{section}{-1}
+\section{Streszczenie dokumentu}
+
+%streszczenie
+
+
+{\newgeometry{left=1cm, right=1.5cm}
+	\section{Harmonogram Prac}
+\ganttset{%
+	calendar week text=
+	{
+		\currentweek
+	}
+	}%
+	\begin{ganttchart}
+		[
+			vgrid={draw=none, draw=none, draw=none,  dotted},
+			hgrid,
+			x unit=0.8mm,
+			y unit chart=0.87cm,
+			time slot format=isodate
+		]{2014-11-9}{2015-03-20}
+	\gantttitlecalendar{year, month, week} \\
+
+	\ganttgroup{Group 1}{2014-11-09}{2015-03-12} \\ 
+	\ganttbar{Impl. bazy danych}{2014-11-09}{2015-01-20}  \\
+	\ganttbar{Poprawa bazy danych}{2015-01-21}{2015-02-01} \\
+	\ganttbar{Impl. systemu dla pracowników}{2015-02-02}{2015-02-20}  \\
+	\ganttbar{Poprawa systemu}{2015-02-21}{2015-03-12} \\
+
+	\ganttgroup{Group 2}{2014-11-9}{2015-02-28} \\
+	\ganttbar{Impl. platformy webowej}{2014-11-09}{2014-12-28} \\
+	\ganttbar{Poprawa platformy}{2014-12-29}{2015-01-14} \\
+	\ganttbar{Scalanie platformy i systemu z bazą danych}{2015-02-15}{2015-02-28} \\
+
+	\ganttgroup{Group 3}{2014-12-28}{2015-03-12} \\
+	\ganttbar{Testy platformy webowej}{2014-12-28}{2015-01-14} \\
+	\ganttbar{Testy bazy danych}{2015-01-20}{2015-02-01} \\
+	\ganttbar{Testy systemu dla pracowników}{2015-02-20}{2015-03-12} \\
+
+
+	\ganttlink{elem1}{elem11}
+	\ganttlink{elem1}{elem2}
+
+	\ganttlink{elem2}{elem3}
+	\ganttlink{elem3}{elem4}
+	\ganttlink{elem3}{elem12}
+
+
+	\ganttlink{elem6}{elem10}
+	\ganttlink{elem6}{elem7}
+	\ganttlink{elem7}{elem8}
+
+
+
+\end{ganttchart}
+\restoregeometry
+
+\section{Przypadki Użycia}
+
+\begin{tikzpicture}
+	\begin{umlpackage}[x=0, y=0]{umlpackage}
+
+		\umlemptyclass[width=15ex]{class 1}
+		
+	\end{umlpackage}
+\end{tikzpicture}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\end{document}
