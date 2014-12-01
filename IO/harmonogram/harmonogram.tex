@@ -132,18 +132,49 @@
 
 
 \end{ganttchart}
-\restoregeometry
 
 \section{Przypadki Użycia}
 
 \begin{tikzpicture}
-	\begin{umlpackage}[x=0, y=0]{umlpackage}
 
-		\umlemptyclass[width=15ex]{class 1}
+
+		\begin{umlsystem}[x=9, fill=green!10]{System}
+			\umlusecase[x=-1]{przeglądnięcie repertuaru}
+			\umlusecase[x=-3, y=-1, width=8ex]{rejestracja}
+			\umlusecase[x=-1, y=-2]{wypożyczenie książki}
+			\umlusecase[x=-1, y=-3.25]{Sprawdzenie dostępności pozycji}
+			\umlusecase[x=-1, y=-5.75]{wyświetlenie listy zalegających}
+
+			\umlusecase[x=3, y=-1, fill=red!10]{Zarządzanie kontami}
+			\umlusecase[x=3, y=-4.25, fill=red!10]{Zarządzanie bazą danych}
+
+		\end{umlsystem}
+
+		\umlactor[y=-0.5]{użytkownik}
+		\umlactor[x=3, y=-2, scale=0.7]{ogólny}
+		\umlactor[y=-5]{pracownik}
+		\umlactor[x=17, y=-2]{administrator}
+
+		%relations:
+		\umlassoc{użytkownik}{usecase-1}
+		\umlVHextend[pos stereo=1.5]{użytkownik}{ogólny}
+
+		\umlassoc{ogólny}{usecase-2}
+		\umlassoc{ogólny}{usecase-3}
+		\umlassoc{ogólny}{usecase-4}
+
+		\umlVHextend[pos stereo=1.5]{pracownik}{ogólny}
+		\umlCNassoc{pracownik}{2,-5}{usecase-5}
+
+		\umlassoc{administrator}{usecase-6}
+		\umlassoc{administrator}{usecase-7}
+
 		
-	\end{umlpackage}
+
+
 \end{tikzpicture}
 
+\restoregeometry
 
 
 
