@@ -1,0 +1,208 @@
+\documentclass[11pt,a4paper]{article}
+% Interlinia
+\linespread{1.15}
+% Polskie różności
+\usepackage[utf8]{inputenc}
+\usepackage{polski}
+%\usepackage[polish]{babel}
+% Kropki po numerach sekcji w tekście...
+\usepackage{secdot}
+\sectiondot{subsection}
+\sectiondot{subsubsection}
+% ... i spisie treści
+\usepackage{tocloft}
+\renewcommand{\cftsecaftersnum}{.}
+\renewcommand{\cftsubsecaftersnum}{.}
+\renewcommand{\cftsubsubsecaftersnum}{.}
+% Przeklęte tabelki
+\usepackage[labelfont=it]{caption}
+\setcounter{table}{-1}
+% do rysowania wykresu gantta
+\usepackage{pgfgantt}
+% równanie marginesów przy harmonogramie
+\usepackage[a4paper]{geometry}
+
+\begin{document}
+
+%
+% Strona tytułowa
+%
+\pagenumbering{gobble}
+\begin{center}
+	\Large
+	Studencka Pracownia Inżynierii Oprogramowania \\[0.5cm]
+	Instytut Informatyki Uniwersytetu Wrocławskiego 
+
+	\vspace*{\fill}
+	Rafał Pacut, Gabriel Sztorc \\[1cm]
+	{\Huge System obsługi bibliotek publicznych} \\[1cm]
+	Plan Testów
+	\vspace*{\fill}
+
+	Wrocław, 4 listopada 2014 \\[0.5cm]
+	Wersja 0.3
+\end{center}
+\newpage
+\pagenumbering{arabic}
+\setcounter{page}{2}
+%
+% Koniec strony tytułowej
+%
+
+%
+% Tabela zmian
+%
+\begin{table}
+\caption{Historia zmian dokonanych w dokumencie}
+\begin{tabular}{|l|l|l|l|}
+    \hline
+    \multicolumn{1}{|c|}{Data} & \multicolumn{1}{c|}{Numer wersji} & 
+        \multicolumn{1}{c|}{Opis} & \multicolumn{1}{c|}{Autor} \\
+    \hline \hline
+    2015-01-15 & 0.1 & Utworzenie dokumentu & Gabriel Sztorc \\
+    \hline
+    2014-01-17 & 0.2 & Rozwinięcie dokumentu & Rafał Pacut \\
+    \hline
+    2014-01-17 & 0.3 & Uzupełnienie dokumentu & Gabriel Sztorc \\
+    \hline
+    2014-01-19 & 0.4 & Redakcja i korekta & Gabriel Sztorc \\
+    \hline
+\end{tabular}
+\end{table}
+%
+% Koniec tabeli zmian
+%
+
+% \section*{Spis treści}
+\tableofcontents
+
+\newpage
+
+\section{Wstęp}
+Przedmiotem tego dokumentu jest szczegółowy opis procesu testowania systemu obsługi bibliotek publicznych.
+Opisuje on, które funkcje będą podlegały testowaniu i kryteria oceny wyników testów.
+Oprócz tego zawiera on listę zasobów niezbędnych do przeprowadzenia testów i harmonogram
+zgodnie z którym będą one przeprowadzone.
+
+\subsection{Definicje}
+
+	\begin{enumerate}
+		\item Użytkownik - klient biblioteki. 
+		\item Pracownik - pracownik biblioteki. 
+		\item Wada - każda nieprawidłowość wykonania funkcji, w wyniku której może dojść do awarii.
+		\item Awaria - każda wada powodująca nieprawidłowe działanie systemu. 
+	\end{enumerate}
+
+\section{Elementy testowane i zakres testów}
+Testom zostaną poddane następujące moduły systemu:
+	\begin{itemize}
+		\item Baza danych,
+		\item Funkcje użytkownika,  %TODO: kto to jest użytkownik
+		\item Funkcje pracownika,   % 	i kto to jest pracownik.
+		\item Interfejs graficzny;
+	\end{itemize}
+
+	\subsection{Testowanie obciążeniowe i wydajnościowe}
+
+	W ramach testu wygenerowana zostanie bardzo duża ilość zapytań do bazy danych, \\
+	Zasymulowane zostanie również logowanie i wchodzenie na stronę główną bardzo dużej ilości użytkowników. \\ 
+	\\
+	Przy każdym z powyższych testów mierzony będzie czas wykonania 
+	tj. czas między zapytaniem wysłanym przez skrypt do otrzymania odpowiedzi. \\
+
+
+	\subsection{Testy spójności}
+
+	Przeprowadzone zostaną testy na spójność komponentów  \\
+	i wykorzystanie wszystkich składowych systemu jednocześnie.\\
+
+	\subsection{Spełnienie założeń}
+
+	Skonstruowany zostanie szkic wykonania funkcji systemu zgodnie 
+	z dokumentacją, w oparciu o przypadki użycia.\\
+	Następnie funkcje będą testowane zgodnie ze szkicem.
+
+	\subsection{Testowanie zgodności}
+
+	Testowanie prawidłowego działania strony WWW na różnych przeglądarkach i platformach.\\
+	 W szczególności sprawdzane będzie prawidłowe zachowanie
+	interfejsu użytkownika i zgodność wszystkich podstron ze standardem W3.
+
+	\subsection{Testowanie bezpieczeństwa}
+
+	Przeprowadzone zostaną testy dotyczące nieprawidłowego użytkowania strony WWW przez użytkownika, takie jak:
+		\begin{itemize}
+
+			\item	 zmiana adresu url, 
+			\item używanie znaków specjalnych przy zapytaniach
+				do bazy danych np. \%s, 
+			\item  próby SQL injection; 
+		\end{itemize}
+	W ramach tych testów sprawdzony zostanie system automatycznego tworzenia kopii zapasowych i modułu odpowiedzialnego za odzyskiwanie stanu systemu z kopii zapasowej.\\
+
+\section{Kryteria przejścia testu}
+	Za moduł, który przeszedł testy uznaje się moduł, na którym:
+		\begin{itemize}
+			\item przeprowadzone zostały wszystkie przypadki testowe,
+			\item conajwyżej 10\% testów wykazało pomniejsze wady, %TODO: co to jest pomniejsza wada
+			\item nie wystąpiła żadna awaria;				% co to jest awaria.
+		\end{itemize}
+
+\section{Kryteria zawieszenia i wznowienia}
+Proces testowania powinien zostać zawieszony, gdy wystąpi którakolwiek z następujących sytuacji:
+
+	\begin{itemize}
+		\item  istnieje nieprzetestowana funkcja zależna od funkcji, której conajmiej jeden test wykazał awarię,
+		\item  istnieje nieprzetestowana funkcja zależna od funkcji, której liczba testów wykazujących wadę przekroczyła 30\%;
+	\end{itemize}
+Wznowienie procesu testowania może rozpocząć się jedynie gdy poprawiona wersja modułu przejdzie wszystkie testy wykonane do momentu zawieszenia.
+
+\section{Produkty testowania}
+W skład produktów testowania wchodzą:
+	\begin{itemize}
+		\item dokumentacja,
+		\item przypadki testowe,
+		\item narzędzia używane do testowania,
+		\item skrypty symulujące,
+		\item dzienniki błedów,
+	\end{itemize}
+
+\section{Środowiska testowania}
+Do testowania potrzebne będą conajmniej dwa komuputery z systemami operacyjnymi Windows XP, Windows 7, Windows 8.1, Linux i Makintosh.
+Jeden ze stosunkowo starym sprzętem i jeden ze sprzętem klasy przeciętnej.
+Na komputerach przetestowane zostaną przeglądarki: Safari, Chrome, Firefox i IE.
+
+\section{Potrzeby szkoleniowe}
+Do wykonania testów potrzebny będzie wykwalifikowany zespół testerów. Ich zadaniem będzie obsługa programów jak Webserver Stress Tool, 
+napisanie i obsługa skryptów emulujących wielu użytkowników itp.
+
+\section{Harmonogram}
+Testom zostanie poddany każdy moduł po zakończeniu pojedyńczego cyklu wytwarzania oprogramowania.
+Pozytywny wynik testów jest wymagany do rozpoczęcia kolejnego cyklu.
+Po zakończeniu wszystkich faz wytwarzania oprogramowania testom poddana zostanie całość systemu.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\end{document}
