@@ -74,7 +74,8 @@ def Third():
 #It's O(n^2), becouse worst case is array sorted ascending, then for each element
 # we have to make on average n-1 swaps. Which gives us n^2/2 complexity.
 #The dominant operation is comparison.
-#d) ...
+#d) ascending order: 0comparisons
+#   descending order: n^2
 
 
 def Fifth(n):
