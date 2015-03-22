@@ -30,7 +30,7 @@ class Primes: IEnumerator
 	{
 		get
 		{
-			return this;
+			return this.position;
 		}
 	}
 
@@ -64,7 +64,7 @@ class Program
 	public static void Main()
 	{
 		PrimeCollection pc = new PrimeCollection();
-		foreach(Primes p in pc)
+		foreach(int p in pc)
 			Console.WriteLine(p);
 	}
 }
