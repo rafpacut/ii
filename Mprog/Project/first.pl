@@ -1,11 +1,11 @@
-dimension(X,7). % dimensions of the board, suppose for the moment its square.
+%dimension(X,7). % dimensions of the board, suppose for the moment its square.
 
 %make list of lists.
 
 
 populate([], Y_dimension, Y_dimension):- !.
 populate([H|List], Y_dimension, CountY):-
-	H = false,
+	H = data(notvisited,noparent),
 	CountY1 is CountY + 1,
 	populate(List, Y_dimension, CountY1).	
 
@@ -39,31 +39,28 @@ get_elem(Elem,[_|Tail],Iter):-
 	Iter is IterNext + 1.
 
 
-% Stack implementation
-stack_constructor(Stack):-
-	Stack = [].
+% queue implementation using difference list
+queue_constructor(L-L).
 
-% Stack handling
-top([], empty).
-top([Head|_], Head).
+% Queue handling
+create_queue(List-List).
 
-stack_pop([], empty).
-stack_pop([_|Tail], Tail).
-	
-stack_put(Elem, Stack, [Elem|Stack]).
+add_queue(Elem, List-[Elem|Rest], List-Rest).
 
-	
+del_queue(Elem, List-Last, NewList-Last) :- 
+	List \== Last,
+        List = [Elem|Rest].
+
+
 
 
 program:-
-	array2d_constructor(2,2,List),
-	get_element(Elem,List,2, 2),
+	create_queue(Queue),
+	add_queue(1,Queue, Queue1),
+	del_queue(X, Queue1, Queue2),
+	write(X).
 
-	stack_constructor(Stack),
-	stack_put(Elem, Stack, Stack1),
-	top(Stack1, Elem),
-	write(Elem),
-	stack_pop(Stack, Stackmod).
+
 
 
 
