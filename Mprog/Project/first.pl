@@ -1,6 +1,6 @@
 populate([], X_row, Y_dimension, Y_dimension):- !.
 populate([H|List],X_row, Y_dimension, CountY):-
-	H = dParentvertexata(position(X_row, CountY),Visited,parent_pos(X_row, CountY),
+	H = data(position(X_row, CountY),Visited,parent_pos(X_row, CountY)),
 	CountY1 is CountY + 1,
 	populate(List,X_row,  Y_dimension, CountY1).	
 
@@ -69,12 +69,12 @@ loop(Graph, Queue, Vertex, EndVertex):-
 	mark_visited(Vertex),
 	add_neighbours(Graph, Queue, Vertex, NewQueue),
 	dequeue(NextVertex, NewQueue, OtherQueue),
-	set_parent(NextVertex, Vertex),
+	%set_parent(NextVertex, Vertex),
 	loop(Graph, OtherQueue, NextVertex, EndVertex).
 
 %in case Vertex in loop was already visited:
 loop(Graph, Queue, Vertex, EndVertex):-
-	Vertex = data(position(X,Y),_,parent_pos(_,_)), write(X+Y+WASVisited),nl,
+	Vertex = data(position(X,Y),_,parent_pos(_,_)), write(X+Y+wASVisited),nl,
 	dequeue(NextVertex, Queue, OtherQueue), 
 	loop(Graph, OtherQueue, NextVertex, EndVertex).
 
@@ -87,7 +87,7 @@ loop(Graph, [], Vertex, Endvertex):-
 %is loop(_, [], SomeVertex, SomePosssiblyOtherVertex).
 
 add_neighbour(Graph, Queue, Vertex, ProductQueue):-
-	nonvar(Vertex),
+	nonvar(Vertex), !,
 	enqueue(Vertex, Queue, ProductQueue).
 
 add_neighbour(_, Queue, _, Queue).
@@ -98,28 +98,28 @@ add_neighbours(Graph, Queue, data(position(X,Y),_,parent_pos(_,_)), ProductQueue
 	X2 is X - 1, Y2 is Y - 1,
 
 	get_elem(Vert1, Graph, X, Y1),
-	add_neighbour(Graph, Queue, Vert1, Parent, Queue2),
+	add_neighbour(Graph, Queue, Vert1, Queue2),
 
 	get_elem(Vert2, Graph, X, Y2),
-	add_neighbour(Graph, Queue2, Vert2, Parent, Queue3),
+	add_neighbour(Graph, Queue2, Vert2, Queue3),
 
 	get_elem(Vert3, Graph, X1, Y),
-	add_neighbour(Graph, Queue3, Vert3, Parent, Queue4),
+	add_neighbour(Graph, Queue3, Vert3, Queue4),
 
 	get_elem(Vert4, Graph, X1, Y1),
-	add_neighbour(Graph, Queue4, Vert4, Parent, Queue5),
+	add_neighbour(Graph, Queue4, Vert4, Queue5),
 
-	get_elem(Vert5, Graph, X, Y2),
-	add_neighbour(Graph, Queue5, Vert5, Parent, Queue6),
+	get_elem(Vert5, Graph, X1, Y2),
+	add_neighbour(Graph, Queue5, Vert5, Queue6),
 
 	get_elem(Vert6, Graph, X2, Y),
-	add_neighbour(Graph, Queue6, Vert6, Parent, Queue7),
+	add_neighbour(Graph, Queue6, Vert6,  Queue7),
 
 	get_elem(Vert7, Graph, X2, Y1),
-	add_neighbour(Graph, Queue7, Vert7, Parent, Queue8),
+	add_neighbour(Graph, Queue7, Vert7,  Queue8),
 
 	get_elem(Vert8, Graph, X2, Y2),
-	add_neighbour(Graph, Queue8, Vert8, Parent, ProductQueue).
+	add_neighbour(Graph, Queue8, Vert8,  ProductQueue).
 
 
 
