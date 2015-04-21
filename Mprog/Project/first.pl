@@ -1,6 +1,6 @@
 populate([], X_row, Y_dimension, Y_dimension):- !.
 populate([H|List],X_row, Y_dimension, CountY):-
-	H = data(position(X_row, CountY),Visited,parent_pos(X_row, CountY)),
+	H = data(position(X_row, CountY),Visited,parent_pos(Z, Z1)),
 	CountY1 is CountY + 1,
 	populate(List,X_row,  Y_dimension, CountY1).	
 
@@ -25,9 +25,9 @@ array2d_constructor(X,Y,Count,[A|B]) :-
 % X,Y - position in rows and columns respectively.
 
 get_elem(Elem, List2d, X, Y):-
-	get_elem(List1d, List2d, X),
-	nonvar(List1d),
-	get_elem(Elem, List1d, Y), !.
+	get_elem(List1d, List2d, X), 
+	nonvar(List1d), !,
+	get_elem(Elem, List1d, Y).
 
 get_elem(_,_,_,_):-!.
 	
@@ -54,6 +54,13 @@ dequeue(Elem, List-Last, NewList-Last) :-
 	List = [Elem|Rest],
 	NewList = Rest.
 
+path_reconstruction(Graph, data(position(_,_),_,parent_pos(X,Y))):-
+	nonvar(X), nonvar(Y), !,
+	nl,
+	write(X+Y),
+	get_elem(Parent, Graph, X, Y),
+	path_reconstruction(Graph, Parent).
+
 
 
 
@@ -63,26 +70,25 @@ bfs(Graph, Startvertex, Endvertex, Path):-
 
 
 
+loop(Graph, _, EndVertex, EndVertex):-
+	!,
+	path_reconstruction(Graph, EndVertex).
 
 loop(Graph, Queue, Vertex, EndVertex):-
 	was_not_visited(Vertex), !,
-	Vertex = data(position(X,Y),_,parent_pos(_,_)), write(X+Y+wasntVisited), nl,
+	%	Vertex = data(position(X,Y),_,parent_pos(_,_)), write(X+Y+wasntVisited), nl,
 	mark_visited(Vertex),
 	add_neighbours(Graph, Queue, Vertex, NewQueue),
 	dequeue(NextVertex, NewQueue, OtherQueue),
-	%set_parent(NextVertex, Vertex),
 	loop(Graph, OtherQueue, NextVertex, EndVertex).
 
 %in case Vertex in loop was already visited:
 loop(Graph, Queue, Vertex, EndVertex):-
-	Vertex = data(position(X,Y),_,parent_pos(_,_)), write(X+Y+wASVisited),nl,
+	%Vertex = data(position(X,Y),_,parent_pos(_,_)), write(X+Y+wASVisited),nl,
 	dequeue(NextVertex, Queue, OtherQueue), 
 	!,
 	loop(Graph, OtherQueue, NextVertex, EndVertex).
 
-loop(_, _, EndVertex, EndVertex):-
-	!,
-       write(weHaveAWinner).	% start path recreation.
 
 loop(Graph, [], Vertex, Endvertex):-
 	!,
@@ -90,41 +96,55 @@ loop(Graph, [], Vertex, Endvertex):-
 	% That should start another permutation.
 %The seperate Vertex and EndVertex should remain, becouse first loop call
 %is loop(_, [], SomeVertex, SomePosssiblyOtherVertex).
+has_no_parent(data(position(_,_),_,parent_pos(X,Y))):-
+	var(X), var(Y).
 
-add_neighbour(Graph, Queue, Vertex, ProductQueue):-
-	nonvar(Vertex), !,
+add_neighbour(Graph, Queue, Vertex, Parent,ProductQueue):-
+	nonvar(Vertex),
+	has_no_parent(Vertex),
+	was_not_visited(Vertex),
+	!,
+	set_parent(Vertex, Parent),
 	enqueue(Vertex, Queue, ProductQueue).
 
-add_neighbour(_, Queue, _, Queue).
+add_neighbour(Graph, Queue, Vertex, Parent,ProductQueue):-
+	nonvar(Vertex),
+	was_not_visited(Vertex),
+	!,
+	enqueue(Vertex, Queue, ProductQueue).
+
+add_neighbour(_, Queue, _,_, Queue).
 
 
-add_neighbours(Graph, Queue, data(position(X,Y),_,parent_pos(_,_)), ProductQueue):-
+add_neighbours(Graph, Queue, Parent, ProductQueue):-
+	Parent = data(position(X,Y),_,parent_pos(_,_)), 
+
 	X1 is X + 1, Y1 is Y + 1,
-	X2 is X - 1, Y2 is Y - 1,
+	X2 is X - 1, Y2 is Y - 1,	
 
 	get_elem(Vert1, Graph, X, Y1),
-	add_neighbour(Graph, Queue, Vert1, Queue2),
+	add_neighbour(Graph, Queue, Vert1,Parent, Queue2),
 
 	get_elem(Vert2, Graph, X, Y2),
-	add_neighbour(Graph, Queue2, Vert2, Queue3),
+	add_neighbour(Graph, Queue2, Vert2, Parent,Queue3),
 
 	get_elem(Vert3, Graph, X1, Y),
-	add_neighbour(Graph, Queue3, Vert3, Queue4),
+	add_neighbour(Graph, Queue3, Vert3, Parent,Queue4),
 
 	get_elem(Vert4, Graph, X1, Y1),
-	add_neighbour(Graph, Queue4, Vert4, Queue5),
+	add_neighbour(Graph, Queue4, Vert4, Parent,Queue5),
 
 	get_elem(Vert5, Graph, X1, Y2),
-	add_neighbour(Graph, Queue5, Vert5, Queue6),
+	add_neighbour(Graph, Queue5, Vert5, Parent,Queue6),
 
 	get_elem(Vert6, Graph, X2, Y),
-	add_neighbour(Graph, Queue6, Vert6,  Queue7),
+	add_neighbour(Graph, Queue6, Vert6,  Parent,Queue7),
 
 	get_elem(Vert7, Graph, X2, Y1),
-	add_neighbour(Graph, Queue7, Vert7,  Queue8),
+	add_neighbour(Graph, Queue7, Vert7,  Parent,Queue8),
 
 	get_elem(Vert8, Graph, X2, Y2),
-	add_neighbour(Graph, Queue8, Vert8,  ProductQueue).
+	add_neighbour(Graph, Queue8, Vert8,  Parent,ProductQueue).
 
 
 
@@ -132,7 +152,7 @@ add_neighbours(Graph, Queue, data(position(X,Y),_,parent_pos(_,_)), ProductQueue
 was_not_visited(data(position(_,_),Visited, parent_pos(_,_))):-
 	var(Visited).
 
-set_parent(data(position(_,_),Visited, parent_pos(X,Y) ), parent_pos(X,Y)).
+set_parent(data(position(_,_),_, parent_pos(X,Y) ), data(position(X,Y),_,parent_pos(_,_))).
 
 
 mark_visited(data(position(_,_),Visited, parent_pos(_,_))):-
@@ -147,7 +167,7 @@ mark_visited(data(position(_,_),Visited, parent_pos(_,_))):-
 program:-
 	array2d_constructor(4,4, List2d),
 	get_elem(S, List2d, 0,0),
-	get_elem(E, List2d, 2,2),
+	get_elem(E, List2d, 3,3),
 	bfs( List2d, S, E, Path).
 
 
