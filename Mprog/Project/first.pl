@@ -25,11 +25,12 @@ array2d_constructor(X,Y,Count,[A|B]) :-
 % X,Y - position in rows and columns respectively.
 
 get_elem(Elem, List2d, X, Y):-
-	X >= 0, !,
 	get_elem(List1d, List2d, X),
-	get_elem(Elem, List1d, Y).
+	nonvar(List1d),
+	get_elem(Elem, List1d, Y), !.
+
+get_elem(_,_,_,_):-!.
 	
-get_elem(Elem, List2d, X, Y).
 
 get_elem(Elem,[Elem|_],0):- !.
 get_elem(Elem,[_|Tail],Iter):-
@@ -76,11 +77,15 @@ loop(Graph, Queue, Vertex, EndVertex):-
 loop(Graph, Queue, Vertex, EndVertex):-
 	Vertex = data(position(X,Y),_,parent_pos(_,_)), write(X+Y+wASVisited),nl,
 	dequeue(NextVertex, Queue, OtherQueue), 
+	!,
 	loop(Graph, OtherQueue, NextVertex, EndVertex).
 
-loop(_, _, EndVertex, EndVertex). % start path recreation.
+loop(_, _, EndVertex, EndVertex):-
+	!,
+       write(weHaveAWinner).	% start path recreation.
 
 loop(Graph, [], Vertex, Endvertex):-
+	!,
 	write(emptyQueue).	
 	% That should start another permutation.
 %The seperate Vertex and EndVertex should remain, becouse first loop call
@@ -142,10 +147,8 @@ mark_visited(data(position(_,_),Visited, parent_pos(_,_))):-
 program:-
 	array2d_constructor(4,4, List2d),
 	get_elem(S, List2d, 0,0),
-	get_elem(E, List2d, 3,3),
+	get_elem(E, List2d, 2,2),
 	bfs( List2d, S, E, Path).
-	
-	
 
 
 
