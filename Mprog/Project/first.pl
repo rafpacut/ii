@@ -54,43 +54,43 @@ dequeue(Elem, List-Last, NewList-Last) :-
 	List = [Elem|Rest],
 	NewList = Rest.
 
-path_reconstruction(Graph, data(position(_,_),_,parent_pos(X,Y))):-
+path_reconstruction(Graph, data(position(_,_),_,parent_pos(X,Y)), PathAcc, Path):-
 	nonvar(X), nonvar(Y), !,
 	nl,
 	write(X+Y),
 	get_elem(Parent, Graph, X, Y),
-	path_reconstruction(Graph, Parent).
+	path_reconstruction(Graph, Parent, [(X,Y)|PathAcc], Path).
 
+path_reconstruction(_,_, Path, Path).
+		
 
 
 
 bfs(Graph, Startvertex, Endvertex, Path):-
 	create_queue(Queue),
-	loop(Graph, Queue,Startvertex, Endvertex).
+	loop(Graph, Queue,Startvertex, Endvertex, Path).
 
 
 
-loop(Graph, _, EndVertex, EndVertex):-
-	!,
-	path_reconstruction(Graph, EndVertex).
+loop(Graph, _, EndVertex, EndVertex, Path):-
+	EndVertex = data(position(X,Y),_,parent_pos(_,_)),
+	path_reconstruction(Graph, EndVertex, [(X,Y)], Path).
 
-loop(Graph, Queue, Vertex, EndVertex):-
+loop(Graph, Queue, Vertex, EndVertex, Path):-
 	was_not_visited(Vertex), !,
-	%	Vertex = data(position(X,Y),_,parent_pos(_,_)), write(X+Y+wasntVisited), nl,
 	mark_visited(Vertex),
 	add_neighbours(Graph, Queue, Vertex, NewQueue),
 	dequeue(NextVertex, NewQueue, OtherQueue),
-	loop(Graph, OtherQueue, NextVertex, EndVertex).
+	loop(Graph, OtherQueue, NextVertex, EndVertex, Path).
 
 %in case Vertex in loop was already visited:
-loop(Graph, Queue, Vertex, EndVertex):-
-	%Vertex = data(position(X,Y),_,parent_pos(_,_)), write(X+Y+wASVisited),nl,
+loop(Graph, Queue, Vertex, EndVertex, Path):-
 	dequeue(NextVertex, Queue, OtherQueue), 
 	!,
-	loop(Graph, OtherQueue, NextVertex, EndVertex).
+	loop(Graph, OtherQueue, NextVertex, EndVertex, Path).
 
 
-loop(Graph, [], Vertex, Endvertex):-
+loop(Graph, [], Vertex, Endvertex, _):-
 	!,
 	write(emptyQueue).	
 	% That should start another permutation.
@@ -161,14 +161,14 @@ mark_visited(data(position(_,_),Visited, parent_pos(_,_))):-
 
 
 
-
-
-
 program:-
 	array2d_constructor(4,4, List2d),
 	get_elem(S, List2d, 0,0),
-	get_elem(E, List2d, 3,3),
-	bfs( List2d, S, E, Path).
+	get_elem(E, List2d, 2,2),
+	bfs( List2d, S, E, Path),
+	Path = [(X,Y)|Rest],
+	nl,write(last),
+	write(X+Y).
 
 
 
