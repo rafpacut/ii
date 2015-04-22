@@ -164,17 +164,17 @@ find_pair_path(PairList, X_dimension, Y_dimension, RecentPaths, [Path1|Path2]):-
 	append(RecentPaths, Path1, TempPaths),
 	find_pair_path(Rest, X_dimension, Y_dimension,TempPaths, Path2).
 
+permute([],[]).
+permute(List, [((X,Y),(X1,Y1))|Rest]):-
+	select(((X,Y),(X1,Y1)), List, List1),
+	permute(List1, Rest).
 
 
 
 solve(X_dimension, Y_dimension, ListaPar, Rozwiazanie):-
-	%find pair path.
-	find_pair_path(ListaPar, X_dimension, Y_dimension, [],  Rozwiazanie).
+	permute(ListaPar, PermutedPairsList),
+	find_pair_path(PermutedPairsList, X_dimension, Y_dimension, [],  Rozwiazanie).
 	
-	%call bfs(X,Y, X1, Y1).
-	%inside bfs call create array. Maybe then the leftovers will be smaller,
-	%anyway i dont have to clean up the mess that much. I have to remember
-	%to mark the path as visited though.
 
 
 
