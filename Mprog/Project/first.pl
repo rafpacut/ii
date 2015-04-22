@@ -26,8 +26,8 @@ array2d_constructor(X,Y,Count,[A|B]) :-
 
 get_elem(Elem, List2d, X, Y):-
 	get_elem(List1d, List2d, X), 
-	nonvar(List1d), !,
-	get_elem(Elem, List1d, Y).
+	nonvar(List1d),
+	get_elem(Elem, List1d, Y), !.
 
 get_elem(_,_,_,_):-!.
 	
@@ -56,23 +56,25 @@ dequeue(Elem, List-Last, NewList-Last) :-
 
 path_reconstruction(Graph, data(position(_,_),_,parent_pos(X,Y)), PathAcc, Path):-
 	nonvar(X), nonvar(Y), !,
-	nl,
-	write(X+Y),
 	get_elem(Parent, Graph, X, Y),
 	path_reconstruction(Graph, Parent, [(X,Y)|PathAcc], Path).
 
-path_reconstruction(_,_, Path, Path).
+path_reconstruction(_,_, Path, Path):- !.
 		
 
 
 
-bfs(Graph, Startvertex, Endvertex, Path):-
+bfs(X_dimension, Y_dimension, (X,Y), (X1,Y1), Path):-
+	array2d_constructor(X_dimension, Y_dimension, Graph),
+	get_elem(StartVertex, Graph, X, Y),
+	get_elem(EndVertex, Graph, X1, Y1),
 	create_queue(Queue),
-	loop(Graph, Queue,Startvertex, Endvertex, Path).
+	loop(Graph, Queue,StartVertex, EndVertex, Path).
 
 
 
 loop(Graph, _, EndVertex, EndVertex, Path):-
+	!,
 	EndVertex = data(position(X,Y),_,parent_pos(_,_)),
 	path_reconstruction(Graph, EndVertex, [(X,Y)], Path).
 
@@ -131,20 +133,21 @@ add_neighbours(Graph, Queue, Parent, ProductQueue):-
 	get_elem(Vert3, Graph, X1, Y),
 	add_neighbour(Graph, Queue3, Vert3, Parent,Queue4),
 
-	get_elem(Vert4, Graph, X1, Y1),
-	add_neighbour(Graph, Queue4, Vert4, Parent,Queue5),
-
-	get_elem(Vert5, Graph, X1, Y2),
-	add_neighbour(Graph, Queue5, Vert5, Parent,Queue6),
-
 	get_elem(Vert6, Graph, X2, Y),
-	add_neighbour(Graph, Queue6, Vert6,  Parent,Queue7),
+	add_neighbour(Graph, Queue4, Vert6,  Parent,ProductQueue).
 
-	get_elem(Vert7, Graph, X2, Y1),
-	add_neighbour(Graph, Queue7, Vert7,  Parent,Queue8),
+	%get_elem(Vert4, Graph, X1, Y1),
+	%add_neighbour(Graph, Queue4, Vert4, Parent,Queue5),
 
-	get_elem(Vert8, Graph, X2, Y2),
-	add_neighbour(Graph, Queue8, Vert8,  Parent,ProductQueue).
+	%get_elem(Vert5, Graph, X1, Y2),
+	%add_neighbour(Graph, Queue5, Vert5, Parent,Queue6),
+
+
+	%get_elem(Vert7, Graph, X2, Y1),
+	%add_neighbour(Graph, Queue7, Vert7,  Parent,Queue8),
+
+	%get_elem(Vert8, Graph, X2, Y2),
+	%add_neighbour(Graph, Queue8, Vert8,  Parent,ProductQueue).
 
 
 
@@ -157,18 +160,41 @@ set_parent(data(position(_,_),_, parent_pos(X,Y) ), data(position(X,Y),_,parent_
 
 mark_visited(data(position(_,_),Visited, parent_pos(_,_))):-
 	Visited = true.
+
 	
+%extract_pair(PairList, (X,Y), (X1,Y1), Number_of_the_pair):-
+%	extract_pair(PairList, (X,Y), (X1,Y1), Number_of_the_pair, 0).
+%
+%extract_pair(PairList, (X,Y), (X1,Y1), Number_of_the_pair, Number_of_the_pair):-
+%	!,
+%	PairList = [((X,Y),(X1,Y1))|Rest].
+%
+%extract_pair(PairList, (X,Y), (X1,Y1), Number_of_the_pair, Acc):-
+%	Acc1 is Acc + 1,
+%	PairList = [((_,_),(_,_))|PairList2],
+%	extract_pair(PairList2, (X,Y), (X1,Y1), Number_of_the_pair, Acc1).
+
+find_pair_path([], _, _, _):- !.
+
+find_pair_path(PairList, X_dimension, Y_dimension, [Path1|Path2]):-
+	write(hehe),
+	PairList = [((X,Y),(X1,Y1))|Rest],
+	bfs(X_dimension, Y_dimension, (X,Y), (X1,Y1), Path1),
+	find_pair_path(Rest, X_dimension, Y_dimension, Path2).
 
 
 
-program:-
-	array2d_constructor(4,4, List2d),
-	get_elem(S, List2d, 0,0),
-	get_elem(E, List2d, 2,2),
-	bfs( List2d, S, E, Path),
-	Path = [(X,Y)|Rest],
-	nl,write(last),
-	write(X+Y).
+
+solve(X_dimension, Y_dimension, ListaPar, Rozwiazanie):-
+	%find pair path.
+	find_pair_path(ListaPar, X_dimension, Y_dimension, Rozwiazanie).
+	
+	%call bfs(X,Y, X1, Y1).
+	%inside bfs call create array. Maybe then the leftovers will be smaller,
+	%anyway i dont have to clean up the mess that much. I have to remember
+	%to mark the path as visited though.
+
+
 
 
 
@@ -176,8 +202,6 @@ program:-
 % print_array(Array2d, Xdimension, Ydimension, X, Y).
 % X/Ydimension - wymiary tablicy
 % X/Y - iteratory, wywolywac z X=1, Y=1.
-
-
 print_array(Array, Xdimension, Ydimension, X, Ydimension):-
 	!,
 	get_elem(Elem, Array, X, Ydimension),
