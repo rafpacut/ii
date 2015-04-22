@@ -61,11 +61,18 @@ path_reconstruction(Graph, data(position(_,_),_,parent_pos(X,Y)), PathAcc, Path)
 
 path_reconstruction(_,_, Path, Path):- !.
 		
+mark_path(Graph, [[]|_]):-!.
+mark_path(Graph, []):- !.
+mark_path(Graph, [(X,Y)|Rest]):-
+	get_elem(Vertex, Graph, X, Y),
+	mark_visited(Vertex),
+	mark_path(Graph, Rest).
 
 
 
-bfs(X_dimension, Y_dimension, (X,Y), (X1,Y1), Path):-
+bfs(X_dimension, Y_dimension, (X,Y), (X1,Y1),RecentPath, Path):-
 	array2d_constructor(X_dimension, Y_dimension, Graph),
+	mark_path(Graph, RecentPath),
 	get_elem(StartVertex, Graph, X, Y),
 	get_elem(EndVertex, Graph, X1, Y1),
 	create_queue(Queue),
@@ -136,20 +143,6 @@ add_neighbours(Graph, Queue, Parent, ProductQueue):-
 	get_elem(Vert6, Graph, X2, Y),
 	add_neighbour(Graph, Queue4, Vert6,  Parent,ProductQueue).
 
-	%get_elem(Vert4, Graph, X1, Y1),
-	%add_neighbour(Graph, Queue4, Vert4, Parent,Queue5),
-
-	%get_elem(Vert5, Graph, X1, Y2),
-	%add_neighbour(Graph, Queue5, Vert5, Parent,Queue6),
-
-
-	%get_elem(Vert7, Graph, X2, Y1),
-	%add_neighbour(Graph, Queue7, Vert7,  Parent,Queue8),
-
-	%get_elem(Vert8, Graph, X2, Y2),
-	%add_neighbour(Graph, Queue8, Vert8,  Parent,ProductQueue).
-
-
 
 
 was_not_visited(data(position(_,_),Visited, parent_pos(_,_))):-
@@ -162,32 +155,21 @@ mark_visited(data(position(_,_),Visited, parent_pos(_,_))):-
 	Visited = true.
 
 	
-%extract_pair(PairList, (X,Y), (X1,Y1), Number_of_the_pair):-
-%	extract_pair(PairList, (X,Y), (X1,Y1), Number_of_the_pair, 0).
-%
-%extract_pair(PairList, (X,Y), (X1,Y1), Number_of_the_pair, Number_of_the_pair):-
-%	!,
-%	PairList = [((X,Y),(X1,Y1))|Rest].
-%
-%extract_pair(PairList, (X,Y), (X1,Y1), Number_of_the_pair, Acc):-
-%	Acc1 is Acc + 1,
-%	PairList = [((_,_),(_,_))|PairList2],
-%	extract_pair(PairList2, (X,Y), (X1,Y1), Number_of_the_pair, Acc1).
 
-find_pair_path([], _, _, _):- !.
+find_pair_path([], _, _, _, _):- !.
 
-find_pair_path(PairList, X_dimension, Y_dimension, [Path1|Path2]):-
-	write(hehe),
+find_pair_path(PairList, X_dimension, Y_dimension, RecentPaths, [Path1|Path2]):-
 	PairList = [((X,Y),(X1,Y1))|Rest],
-	bfs(X_dimension, Y_dimension, (X,Y), (X1,Y1), Path1),
-	find_pair_path(Rest, X_dimension, Y_dimension, Path2).
+	bfs(X_dimension, Y_dimension, (X,Y), (X1,Y1),RecentPaths, Path1),
+	append(RecentPaths, Path1, TempPaths),
+	find_pair_path(Rest, X_dimension, Y_dimension,TempPaths, Path2).
 
 
 
 
 solve(X_dimension, Y_dimension, ListaPar, Rozwiazanie):-
 	%find pair path.
-	find_pair_path(ListaPar, X_dimension, Y_dimension, Rozwiazanie).
+	find_pair_path(ListaPar, X_dimension, Y_dimension, [],  Rozwiazanie).
 	
 	%call bfs(X,Y, X1, Y1).
 	%inside bfs call create array. Maybe then the leftovers will be smaller,
