@@ -63,16 +63,18 @@ class Fixnum
 			puts string
 	end
 
-	def ackermann(n, m)
+	def Ack(n, m)
 		if n == 0
-			return m +1
+			return m + 1
 		end
 		if m == 0
-			return ackermann
+			return Ack(n-1,1)
+		end
+		return Ack(n-1, Ack(n,m-1))
 	end
 
 	def ack(y)
-		return ackermann(self, y)
+		return Ack(self, y)
 	end
 end
 
@@ -81,4 +83,4 @@ puts 6.perfect
 puts 5.perfect
 123.slownie
 
-2.ack(1)
+puts 2.ack(1)
