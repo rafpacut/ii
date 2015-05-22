@@ -9,17 +9,19 @@ class Jawna
 	def zaszyfruj(shift)
 		shift = shift % Alphabet.length
 		encrypted = ""
-		for i in 0..@string.length-1
+		for i in 0..(@string.length)-1
 			index = Alphabet.index(@string[i])
 			index2 = (index + shift) 
 			index2 %= Alphabet.length
 			encrypted += Alphabet[index2]
 		end
-		puts encrypted
 		return Zaszyfrowane.new(encrypted)
 
 	end
 
+	def to_s
+		return @string
+	end
 end
 
 
@@ -49,8 +51,17 @@ class Zaszyfrowane
 		return Jawna.new(decrypted)
 	end
 
+	def to_s
+		return @string
+	end
+
 end
 
+
+sentence = Jawna.new("Biale mleko")
+encrypted = sentence.zaszyfruj(5)
+sentence2 = encrypted.odszyfruj(5)
+puts sentence2.to_s
 
 
 

@@ -16,7 +16,7 @@ class Fixnum
 		
 	end
 
-	def perfect
+	def doskonala?
 		sum = 0
 		for i in 1..self-1
 			if self % i == 0
@@ -34,53 +34,32 @@ class Fixnum
 	def slownie
 		number = self
 		string = ""
+		slowa = [" zero ", " jeden ", " dwa ", " trzy ", " cztery ", 
+	   			" piec ", " szesc ", " siedem ", " osiem ", " dziewiec "]
 		while number > 0
 			digit = number % 10
 			number = number / 10
-			case digit
-			when 0
-				string = " zero "    + string 
-			when 1                       
-				string = " jeden "   + string 
-			when 2                      
-				string = " dwa "     + string 
-			when 3                     
-				string = " trzy "    + string 
-			when 4                    
-				string = " cztery "  + string 
-			when 5                   
-				string = " piec "    + string 
-			when 6                  
-				string = " szesc "   + string 
-			when 7                 
-				string = " siedem "  + string 
-			when 8                
-				string = " osiem "   + string 
-			when 9               
-				string = " dziewiec "+ string 
-			end
+			string = slowa[digit] + string
 		end
 			puts string
 	end
 
-	def Ack(n, m)
-		if n == 0
-			return m + 1
-		end
-		if m == 0
-			return Ack(n-1,1)
-		end
-		return Ack(n-1, Ack(n,m-1))
-	end
 
 	def ack(y)
-		return Ack(self, y)
+		if self == 0
+			return y+1
+		end
+		if y == 0
+			return (self-1).ack(1)
+		end
+		return (self-1).ack(self.ack(y-1))
 	end
 end
 
 puts 6.prime?
-puts 6.perfect
-puts 5.perfect
+puts 5.prime?
+puts 6.doskonala?
+puts 5.doskonala?
 123.slownie
 
 puts 2.ack(1)
