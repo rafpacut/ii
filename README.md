@@ -1,4 +1,4 @@
-ii
+Uniwersity of Wrocław
 ==
 
-My uni projects and misc's.
+Freshman year exercises
